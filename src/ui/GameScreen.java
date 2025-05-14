@@ -79,7 +79,7 @@ public class GameScreen {
         gamePanel.add(wordTypeFiled, BorderLayout.CENTER);
         gameTimerlbl = new JLabel("", SwingConstants.CENTER);
         gamePanel.add(gameTimerlbl, BorderLayout.SOUTH);
-        gametimer = new Timer(1000 , new GameTimerListener());
+        gametimer = new Timer(1000 , new GameTimerListener(gameTimerlbl));
         gametimer.start();
     }
 
