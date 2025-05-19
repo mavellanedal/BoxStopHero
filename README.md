@@ -39,3 +39,18 @@ El objetivo del juego es escribir correctamente las palabras que aparecen en pan
 - **Maven** (opcional) para gestión de dependencias
 
 ---
+
+---
+
+## 🧑‍💻 Instalación y ejecución
+
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/miquelavellaneda/box-stop-hero.git
+   ```
+2. Ejecutar el archivo
+   ```bash
+   src/ui/MainMenu.java
+   ```
+3. Disfurtar del juego
+
