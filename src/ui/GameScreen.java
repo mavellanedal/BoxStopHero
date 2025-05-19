@@ -1,12 +1,20 @@
 package ui;
 
+import database.GameErrorDAO;
+import models.Game;
+import models.User;
+import models.WrongWord;
+import database.GameDAO;
+
 import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
+import java.sql.Time;
 import java.util.*;
 
 public class GameScreen {
+    private User currentUser;
     private JPanel gamePanel;
     private Timer startTimer;
     private int counter = 3;
@@ -38,7 +46,8 @@ public class GameScreen {
             "científico", "transporte", "transformación", "neuroplasticidad", "pseudoaleatorio"
     ));
 
-    public GameScreen(JFrame frame) {
+    public GameScreen(JFrame frame, User user) {
+        this.currentUser = user;
         this.gamePanel = new BackgroundPanel("src/public/boxStopHero-background.jpg");
         this.gamePanel.setLayout(new BorderLayout());
 
@@ -63,7 +72,7 @@ public class GameScreen {
         wordTypeField.setMaximumSize(new Dimension(300, 30));
         wordToTypeLabel.setForeground(new Color(74, 78, 105));
         wordTypeField.setAlignmentX(Component.CENTER_ALIGNMENT);
-        wordTypeField.addKeyListener(new GameCheckerListener());
+        wordTypeField.addKeyListener(new GameCheckerListener(frame));
 
         southPanel.add(wordToTypeLabel);
         southPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -176,20 +185,13 @@ public class GameScreen {
         }
     }
 
-    public class PalabraFallada {
-        private String palabraCorrecta;
-        private int dificultad;
-        private String palabraEscrita;
-
-        public PalabraFallada(String palabraCorrecta, int dificultad, String palabraEscrita) {
-            this.palabraCorrecta = palabraCorrecta;
-            this.dificultad = dificultad;
-            this.palabraEscrita = palabraEscrita;
-        }
-    }
-
     private class GameCheckerListener extends KeyAdapter {
-        private ArrayList<PalabraFallada> palabrasFalladas = new ArrayList<>();
+        private ArrayList<WrongWord> palabrasFalladas = new ArrayList<>();
+        private JFrame frame;
+
+        public GameCheckerListener(JFrame frame) {
+            this.frame = frame;
+        }
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -207,13 +209,13 @@ public class GameScreen {
                     else if (easyWords.contains(currentWord))
                         difficulty = 1;
                     wordToTypeLabel.setForeground(new Color(139, 30, 63));
-                    PalabraFallada fallo = new PalabraFallada(currentWord, difficulty, wordTyped);
+                    WrongWord fallo = new WrongWord(currentWord, difficulty, wordTyped);
                     palabrasFalladas.add(fallo);
                 }
                 writedWords++;
                 wordTypeField.setEditable(false);
                 new Timer(500, evt -> {
-                    if (writedWords >= 10) {
+                    if (writedWords >= 3) {
                         int centiseconds = (elapsedTime / 10) % 100;
                         int seconds = (elapsedTime / 1000) % 60;
                         int minutes = elapsedTime / 60000;
@@ -223,10 +225,26 @@ public class GameScreen {
                         startLabel.setForeground(new Color(27, 58, 52));
                         wordToTypeLabel.setVisible(false);
                         wordTypeField.setVisible(false);
-                        startLabel.setText("<html>GAME ENDED!!<br>TIME: " + formattedTime +
-                                "<br>Correct: " + correctWords + " / Wrong: " + wrongWords + "<html>");
+                        startLabel.setText("GAME ENDED!!");
+                        Game partida = new Game(
+                                currentUser.getId(),
+                                correctWords,
+                                writedWords - correctWords,
+                                elapsedTime
+                        );
+                        GameDAO gameDAO = new GameDAO();
+                        int game_id = gameDAO.saveGame(partida);
+                        GameErrorDAO.insertarErrores(game_id, palabrasFalladas);
+                        new Timer(3000, e2 -> {
+                            EndGameScreen endGameScreen = new EndGameScreen(frame, game_id);
+                            frame.setContentPane(endGameScreen.getEndGamePanel());
+                            frame.revalidate();
+                            frame.repaint();
+                            ((Timer) e2.getSource()).stop();
+                        }).start();
+
                     } else {
-                        wordToTypeLabel.setForeground(new Color(74, 78, 105)); // gris
+                        wordToTypeLabel.setForeground(new Color(74, 78, 105));
                         showNewWord();
                         wordToTypeLabel.setText(currentWord);
                         wordTypeField.setText("");

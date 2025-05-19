@@ -1,6 +1,8 @@
     package ui;
 
     import database.UserDAO;
+    import models.RoundedButton;
+    import models.User;
 
     import javax.swing.*;
     import java.awt.*;
@@ -143,28 +145,35 @@
 
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (usernameField.getText().isEmpty()) {
-                    this.passwordLabel.setForeground(new Color(74, 78, 105));
-                    this.passwordLabel.setText("Password:");
-                    this.usernameLabel.setForeground(Color.RED);
-                    this.usernameLabel.setText("You must enter a username:");
-                } else if (String.valueOf(passwordField.getPassword()).isEmpty()) {
-                    this.usernameLabel.setForeground(new Color(74, 78, 105));
-                    this.usernameLabel.setText("Username:");
-                    this.passwordLabel.setForeground(Color.RED);
-                    this.passwordLabel.setText("You must enter a password:");
+                String username = usernameField.getText();
+                String password = String.valueOf(passwordField.getPassword());
+
+                if (username.isEmpty()) {
+                    passwordLabel.setForeground(new Color(74, 78, 105));
+                    passwordLabel.setText("Password:");
+                    usernameLabel.setForeground(Color.RED);
+                    usernameLabel.setText("You must enter a username:");
+                } else if (password.isEmpty()) {
+                    usernameLabel.setForeground(new Color(74, 78, 105));
+                    usernameLabel.setText("Username:");
+                    passwordLabel.setForeground(Color.RED);
+                    passwordLabel.setText("You must enter a password:");
                 } else {
                     UserDAO dao = new UserDAO();
-                    boolean success = dao.loginUser(usernameField.getText(), String.valueOf(
-                            passwordField.getPassword()));
+                    boolean success = dao.loginUser(username, password);
                     if (success) {
-                        GameScreen gameScreen = new GameScreen(frame);
-                        frame.setContentPane(gameScreen.getGamePanel());
-                        frame.revalidate();
-                        frame.repaint();
+                        User user = dao.getUserByUsername(username);
+                        if (user != null) {
+                            GameScreen gameScreen = new GameScreen(frame, user); // <-- con User
+                            frame.setContentPane(gameScreen.getGamePanel());
+                            frame.revalidate();
+                            frame.repaint();
+                        } else {
+                            errorLabel.setText("Error loading user data.");
+                            errorLabel.setVisible(true);
+                        }
                     } else {
-                        this.usernameField.setText("");
-                        this.passwordField.setText("");
+                        errorLabel.setText("Username or password incorrect.");
                         errorLabel.setVisible(true);
                     }
                 }
@@ -189,44 +198,5 @@
 
         public JPanel getSignInPanel() {
             return signInPanel;
-        }
-
-        public class RoundedButton extends JButton {
-            private final int arcWidth = 30;
-            private final int arcHeight = 30;
-
-            public RoundedButton(String text) {
-                super(text);
-                setContentAreaFilled(false);
-                setFocusPainted(false);
-                setBorderPainted(false);
-                setForeground(Color.WHITE);
-                setBackground(new Color(194, 159, 97));
-                setFont(new Font("Playfair Display", Font.BOLD, 18));
-            }
-
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-                g2.setColor(getBackground());
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), arcWidth, arcHeight);
-
-                FontMetrics fm = g2.getFontMetrics();
-                int textWidth = fm.stringWidth(getText());
-                int textHeight = fm.getAscent();
-                int x = (getWidth() - textWidth) / 2;
-                int y = (getHeight() + textHeight) / 2 - 4;
-
-                g2.setColor(getForeground());
-                g2.setFont(getFont());
-                g2.drawString(getText(), x, y);
-
-                g2.dispose();
-            }
-
-            @Override
-            public void updateUI() {}
         }
     }
