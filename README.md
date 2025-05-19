@@ -54,3 +54,11 @@ El objetivo del juego es escribir correctamente las palabras que aparecen en pan
    ```
 3. Disfurtar del juego
 
+---
+
+--- 
+
+## 🏞️ Capturas del juego
+
+
+
