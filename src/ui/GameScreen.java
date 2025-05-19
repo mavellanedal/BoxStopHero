@@ -10,7 +10,6 @@ import javax.swing.*;
 import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
-import java.sql.Time;
 import java.util.*;
 
 public class GameScreen {
@@ -105,7 +104,6 @@ public class GameScreen {
         this.wordTypeField.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.wordTypeField.setVisible(false);
 
-        // Envolver en un GridBagLayout para centrar todo el bloque
         JPanel centerWrapper = new JPanel(new GridBagLayout());
         centerWrapper.setOpaque(false);
         centerWrapper.add(centerPanel);
@@ -215,7 +213,7 @@ public class GameScreen {
                 writedWords++;
                 wordTypeField.setEditable(false);
                 new Timer(500, evt -> {
-                    if (writedWords >= 3) {
+                    if (writedWords >= 10) {
                         int centiseconds = (elapsedTime / 10) % 100;
                         int seconds = (elapsedTime / 1000) % 60;
                         int minutes = elapsedTime / 60000;

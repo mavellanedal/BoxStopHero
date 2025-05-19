@@ -75,10 +75,6 @@
             createRegisterBtn(frame);
             signInFormPanel.add(goToRegisterButton);
             signInPanel.add(signInFormPanel, new GridBagConstraints());
-
-            // DEBUUUG
-            usernameField.setText("Test04");
-            passwordField.setText("Temporal001!");
         }
 
         private void createSignInBtn(JFrame frame) {
@@ -164,7 +160,7 @@
                     if (success) {
                         User user = dao.getUserByUsername(username);
                         if (user != null) {
-                            GameScreen gameScreen = new GameScreen(frame, user); // <-- con User
+                            GameScreen gameScreen = new GameScreen(frame, user);
                             frame.setContentPane(gameScreen.getGamePanel());
                             frame.revalidate();
                             frame.repaint();

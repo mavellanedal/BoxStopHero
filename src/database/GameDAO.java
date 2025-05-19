@@ -38,7 +38,8 @@ public class GameDAO {
     public static List<RankingEntry> getTopRankings(int limit) {
         List<RankingEntry> rankings = new ArrayList<>();
         try (Connection conn = DatabaseManager.getConnection()) {
-            String sql = "SELECT u.username, g.total_time FROM games g JOIN users u ON g.user_id = u.id ORDER BY g.total_time ASC LIMIT ?";
+            String sql = "SELECT u.username, g.total_time FROM games g JOIN users u ON g.user_id = u.id " +
+                    "ORDER BY g.total_time ASC LIMIT ?";
             PreparedStatement stmt = conn.prepareStatement(sql);
             stmt.setInt(1, limit);
             ResultSet rs = stmt.executeQuery();

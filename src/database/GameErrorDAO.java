@@ -23,7 +23,7 @@ public class GameErrorDAO {
 
             stmt.executeBatch();
         } catch (SQLException e) {
-            e.printStackTrace(); // Puedes reemplazarlo con una ventana emergente o logueo
+            e.printStackTrace();
         }
     }
 }

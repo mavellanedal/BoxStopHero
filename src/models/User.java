@@ -8,7 +8,6 @@ public class User {
     private String passwordHash;
     private LocalDateTime createdAt;
 
-    // Constructor completo (útil al recuperar desde la base de datos)
     public User(int id, String username, String passwordHash, LocalDateTime createdAt) {
         this.id = id;
         this.username = username;
@@ -16,7 +15,6 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    // Constructor parcial (útil para login o registro)
     public User(String username, String passwordHash) {
         this.username = username;
         this.passwordHash = passwordHash;

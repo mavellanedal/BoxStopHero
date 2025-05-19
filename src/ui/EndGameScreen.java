@@ -21,7 +21,6 @@ public class EndGameScreen {
         endGamePanel.setLayout(new BoxLayout(endGamePanel, BoxLayout.Y_AXIS));
         endGamePanel.setBackground(new Color(11, 20, 28));
 
-        // Título
         JLabel titleLabel = new JLabel("TOP 10 RANKING");
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         titleLabel.setFont(new Font("Eurostile Extended", Font.BOLD, 30));
