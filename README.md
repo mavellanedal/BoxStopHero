@@ -1,7 +1,7 @@
 # Box Stop Hero 🏁⌨️
 
 **Autor:** Miquel Avellaneda  
-**Versión:** 1.0  
+**Versión:** 1.1  
 **Tecnologías:** Java, Swing, MySQL  
 
 ---
@@ -50,7 +50,7 @@ El objetivo del juego es escribir correctamente las palabras que aparecen en pan
    ```
 2. Ejecutar el archivo
    ```bash
-   src/ui/MainMenu.java
+   src/Main.java
    ```
 3. Disfurtar del juego
 
