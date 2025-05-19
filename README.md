@@ -59,6 +59,6 @@ El objetivo del juego es escribir correctamente las palabras que aparecen en pan
 --- 
 
 ## 🏞️ Capturas del juego
-
+![Captura del juego](src/public/capturaReadme.png)
 
 
